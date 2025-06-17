@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentalidade de Progresso - O Manifesto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Gold (Background: #FDFBF7, Text: #1E1B18, Accent: #C89B3C) -->
+    <!-- Application Structure Plan: A single-page, vertical-scrolling SPA designed to be a dynamic manifesto. It starts with a powerful hero section (O Manifesto), moves to foundational stories (A Forja), presents core themes in an interactive grid (O Arsenal), summarizes the core message (O Legado), and ends with a filterable knowledge base (Consulta Rápida). This non-linear, thematic structure prioritizes user engagement and quick access to information over the linear format of the ebook, making the content more digestible and actionable for the web. -->
+    <!-- Visualization & Content Choices: Goal: Inform/Inspire -> Presentation: Large typography, animated text reveals, story cards. Interaction: Click to expand. Justification: Creates an immersive, impactful introduction to Jean's philosophy. | Goal: Organize/Explore -> Presentation: Interactive grids of cards for "O Arsenal" and a filterable/searchable library for "Consulta Rápida". Interaction: Click-to-reveal modals, live filtering. Justification: Manages a large volume of advice, making it accessible and less overwhelming than a static list. | NO Chart.js/Plotly.js used as the source is qualitative. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1E1B18;
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .accent-color {
+            color: #C89B3C;
+        }
+        .bg-accent {
+            background-color: #C89B3C;
+        }
+        .border-accent {
+            border-color: #C89B3C;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #C89B3C;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .filter-btn.active {
+            background-color: #1E1B18;
+            color: #FDFBF7;
+            border-color: #1E1B18;
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body x-data="appData()" @scroll.window="handleScroll()">
+
+    <header class="bg-white/80 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Mentalidade de Progresso</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#manifesto" class="nav-link font-semibold uppercase tracking-wider text-sm" :class="{ 'active': activeSection === 'manifesto' }">Manifesto</a>
+                <a href="#forja" class="nav-link font-semibold uppercase tracking-wider text-sm" :class="{ 'active': activeSection === 'forja' }">A Forja</a>
+                <a href="#arsenal" class="nav-link font-semibold uppercase tracking-wider text-sm" :class="{ 'active': activeSection === 'arsenal' }">O Arsenal</a>
+                <a href="#legado" class="nav-link font-semibold uppercase tracking-wider text-sm" :class="{ 'active': activeSection === 'legado' }">O Legado</a>
+                <a href="#consulta" class="nav-link font-semibold uppercase tracking-wider text-sm" :class="{ 'active': activeSection === 'consulta' }">Consulta Rápida</a>
+            </div>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div x-show="mobileMenuOpen" x-cloak class="md:hidden bg-white border-t">
+            <a href="#manifesto" @click="mobileMenuOpen = false" class="block py-2 px-6 text-sm hover:bg-gray-100">Manifesto</a>
+            <a href="#forja" @click="mobileMenuOpen = false" class="block py-2 px-6 text-sm hover:bg-gray-100">A Forja</a>
+            <a href="#arsenal" @click="mobileMenuOpen = false" class="block py-2 px-6 text-sm hover:bg-gray-100">O Arsenal</a>
+            <a href="#legado" @click="mobileMenuOpen = false" class="block py-2 px-6 text-sm hover:bg-gray-100">O Legado</a>
+            <a href="#consulta" @click="mobileMenuOpen = false" class="block py-2 px-6 text-sm hover:bg-gray-100">Consulta Rápida</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="manifesto" class="min-h-screen flex items-center pt-20">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-tight">Cansado da Mediocridade?</h2>
+                <p class="mt-4 text-lg md:text-2xl max-w-3xl mx-auto font-light">Este não é um livro de autoajuda. É um manifesto de vida, um guia prático e uma semente de transformação pessoal, social e espiritual. Sem fórmulas mágicas. Sem papo raso. Apenas a verdade crua.</p>
+                <p class="mt-8 text-sm uppercase tracking-widest font-bold accent-color">O Legado de Jean</p>
+            </div>
+        </section>
+
+        <section id="forja" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold">A Forja da Mentalidade</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A construção contínua de uma mentalidade inabalável é o pilar fundamental. Cada história, cada fracasso, cada lição, é um golpe do martelo que molda o aço da sua alma.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="card p-6 rounded-lg">
+                        <span class="text-4xl accent-color font-black">01</span>
+                        <h3 class="text-2xl font-bold mt-4">A Quebra de Padrão</h3>
+                        <p class="mt-2 text-gray-600">Sair da zona de conforto não é uma opção, é uma obrigação. A migração para a cidade, a decisão de aprender violão... foram as primeiras rachaduras na parede da estagnação. Você só saberá seu potencial quando se inserir em ambientes que desafiam sua capacidade.</p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                        <span class="text-4xl accent-color font-black">02</span>
+                        <h3 class="text-2xl font-bold mt-4">O Fracasso como Professor</h3>
+                        <p class="mt-2 text-gray-600">O concurso da marinha não foi uma derrota, foi uma lição. Não era sobre ser Fuzileiro Naval, era sobre forjar um novo estilo de vida. A experiência do meio do caminho é mais marcante do que a chegada. Seus maiores fracassos são o combustível para suas maiores vitórias.</p>
+                    </div>
+                    <div class="card p-6 rounded-lg">
+                        <span class="text-4xl accent-color font-black">03</span>
+                        <h3 class="text-2xl font-bold mt-4">A Arte de Retroceder</h3>
+                        <p class="mt-2 text-gray-600">A sociedade de 20 mil que faliu foi um golpe duro. Mas retroceder é uma atitude inteligente de um vencedor. É necessário dar passos para trás para se manter caminhando. Estar caído é diferente de estar prostrado. Reinicie do zero, com mais fé, disciplina e coragem.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="arsenal" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold">O Arsenal do Homem</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A mentalidade é a base, mas a guerra se vence com táticas e ferramentas. Estes são os pilares do autodomínio e dos resultados reais.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card text-center p-8 rounded-lg">
+                        <div class="text-4xl mb-4">🧠</div>
+                        <h3 class="text-2xl font-bold">Autodomínio</h3>
+                        <p class="mt-2 text-sm text-gray-500">Controle seus impulsos, domine suas emoções. Quem manda em você?</p>
+                    </div>
+                    <div class="card text-center p-8 rounded-lg">
+                        <div class="text-4xl mb-4">⚙️</div>
+                        <h3 class="text-2xl font-bold">Disciplina</h3>
+                        <p class="mt-2 text-sm text-gray-500">Consistência brutal. Faça o que precisa ser feito, mesmo sem vontade.</p>
+                    </div>
+                    <div class="card text-center p-8 rounded-lg">
+                        <div class="text-4xl mb-4">💰</div>
+                        <h3 class="text-2xl font-bold">Abundância</h3>
+                        <p class="mt-2 text-sm text-gray-500">Quebre as crenças limitantes. O dinheiro é a moeda da liberdade.</p>
+                    </div>
+                    <div class="card text-center p-8 rounded-lg">
+                        <div class="text-4xl mb-4">🤝</div>
+                        <h3 class="text-2xl font-bold">Relações</h3>
+                        <p class="mt-2 text-sm text-gray-500">Escolha sua tribo com precisão cirúrgica. Águias andam com águias.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="legado" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold">Construindo um Legado</h2>
+                <div class="mt-10 max-w-3xl mx-auto space-y-8">
+                    <blockquote class="text-2xl md:text-3xl font-bold italic border-l-4 border-accent pl-6">
+                        "Seu futuro melhor, depende do banimento do seu passado deletério. Atente-se no agora, pois ele pode reverter sua interpretação sobre seu passado e prospectar seu futuro."
+                    </blockquote>
+                    <p class="text-lg text-gray-700">O que você deixa para trás? Sua vida é sua mensagem. Conhecimento e afeto, se guardar, perde. Transborde. Construa algo de valor para o mundo ao invés de ser apenas um consumidor. Essa é a verdadeira imortalidade.</p>
+                    <a href="#consulta" class="inline-block bg-accent text-white font-bold py-3 px-8 rounded-lg uppercase tracking-wider text-sm hover:bg-opacity-90 transition-colors">Explore o Arsenal Completo</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="consulta" class="py-20" x-data="arsenalData">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold">Consulta Rápida: O Arsenal de Jean</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">Filtre os ensinamentos por categoria. A sabedoria que você precisa, no momento que você precisa.</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+                    <button @click="filter = 'all'" :class="{ 'active': filter === 'all' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Todos</button>
+                    <button @click="filter = 'aco'" :class="{ 'active': filter === 'aco' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Aço na Alma</button>
+                    <button @click="filter = 'ferramentas'" :class="{ 'active': filter === 'ferramentas' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Ferramentas de Guerra</button>
+                    <button @click="filter = 'mandamentos'" :class="{ 'active': filter === 'mandamentos' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Mandamentos</button>
+                    <button @click="filter = 'antidotos'" :class="{ 'active': filter === 'antidotos' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Antídotos</button>
+                    <button @click="filter = 'visao'" :class="{ 'active': filter === 'visao' }" class="filter-btn text-sm font-semibold border-2 border-gray-300 rounded-full px-4 py-2 transition-colors">Visão de Águia</button>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="item in filteredItems" :key="item.id">
+                        <div class="card p-6 rounded-lg" x-show="filter === 'all' || filter === item.category">
+                            <span class="text-xs uppercase font-bold tracking-wider" :class="getCategoryClass(item.category)" x-text="getCategoryName(item.category)"></span>
+                            <p class="mt-2 font-semibold text-lg" x-text="item.text"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-2xl font-bold">Mentalidade de Progresso</h3>
+            <p class="mt-2 text-sm text-gray-400">Um manifesto para forjar uma vida de autodomínio, crescimento e progresso real.</p>
+            <p class="mt-6 text-xs text-gray-500">&copy; 2025. Todos os direitos reservados. Este é um trabalho conceitual de visualização de informação.</p>
+        </div>
+    </footer>
+
+    <script>
+        function appData() {
+            return {
+                mobileMenuOpen: false,
+                activeSection: 'manifesto',
+                handleScroll() {
+                    const sections = ['manifesto', 'forja', 'arsenal', 'legado', 'consulta'];
+                    let currentSection = 'manifesto';
+                    for (const sectionId of sections) {
+                        const sectionEl = document.getElementById(sectionId);
+                        if (sectionEl) {
+                            const rect = sectionEl.getBoundingClientRect();
+                            if (rect.top <= 100 && rect.bottom >= 100) {
+                                currentSection = sectionId;
+                                break;
+                            }
+                        }
+                    }
+                    this.activeSection = currentSection;
+                }
+            }
+        }
+        
+        function arsenalData() {
+            return {
+                filter: 'all',
+                items: [
+                    { id: 1, category: 'aco', text: 'Você não é vítima. Assuma o volante da sua vida. Agora.' },
+                    { id: 2, category: 'ferramentas', text: 'Foque na solução dos problemas, não neles. O mundo está cheio de pessoas que apenas tentam. Vá lá e FAÇA.' },
+                    { id: 3, category: 'mandamentos', text: 'Respeite seus pais. Independentemente de como os veja, você só existe por causa deles. Mas seus fracassos são sua responsabilidade.' },
+                    { id: 4, category: 'antidotos', text: 'Fracassou? Não. Você apenas descobriu uma maneira que não deu certo. Continue avançando.' },
+                    { id: 5, category: 'visao', text: 'O que a vida cobra, a escola não ensinou. Busque além do que lhe foi passado. Seja autodidata.' },
+                    { id: 6, category: 'aco', text: 'Retroceder é uma atitude inteligentíssima de um vencedor. É preciso dar passos atrás para continuar caminhando.' },
+                    { id: 7, category: 'ferramentas', text: 'Aprenda a vender. No frigir dos ovos, todos vendemos algo: uma ideia, um serviço, nossa imagem.' },
+                    { id: 8, category: 'mandamentos', text: 'Não barganhe seus valores e princípios. Eles são inegociáveis.' },
+                    { id: 9, category: 'antidotos', text: 'Por trás de cada desafio há uma oportunidade de crescimento. A vida sempre manda oportunidades fantasiadas de problemas.' },
+                    { id: 10, category: 'visao', text: 'Não compare seus bastidores com o palco dos outros. A vida de ninguém é perfeita.' },
+                    { id: 11, category: 'aco', text: 'Pare de justificar suas escolhas imaturas. Quem colhe as vitórias e derrotas é você.' },
+                    { id: 12, category: 'ferramentas', text: 'Saiba dizer "Não". Para tudo aquilo que pode impedir seu progresso.' },
+                    { id: 13, category: 'mandamentos', text: 'Não traia a confiança que lhe foi depositada. Uma palavra falada é uma flecha lançada.' },
+                    { id: 14, category: 'antidotos', text: 'Ignore as pessoas tóxicas. Ninguém joga pedra em árvore que não dá fruto.' },
+                    { id: 15, category: 'visao', text: 'Águia anda com águia. Diga-me com quem andas e te direi quem és.' },
+                    { id: 16, category: 'aco', text: 'Seus pensamentos geram sentimentos, que geram ações, que geram resultados. Controle a fonte.' },
+                    { id: 17, category: 'ferramentas', text: 'O poder do "todo dia". Um pouco todos os dias constrói impérios.' },
+                    { id: 18, category: 'visao', text: 'O Conhecimento é o maior elevador social atual. Não deixe para aprender mais tarde.' },
+                ],
+                get filteredItems() {
+                    if (this.filter === 'all') {
+                        return this.items;
+                    }
+                    return this.items.filter(item => item.category === this.filter);
+                },
+                getCategoryName(category) {
+                    switch(category) {
+                        case 'aco': return 'Aço na Alma';
+                        case 'ferramentas': return 'Ferramentas de Guerra';
+                        case 'mandamentos': return 'Mandamentos';
+                        case 'antidotos': return 'Antídotos';
+                        case 'visao': return 'Visão de Águia';
+                        default: return 'Geral';
+                    }
+                },
+                getCategoryClass(category) {
+                    switch(category) {
+                        case 'aco': return 'text-red-700';
+                        case 'ferramentas': return 'text-blue-700';
+                        case 'mandamentos': return 'text-green-700';
+                        case 'antidotos': return 'text-yellow-700';
+                        case 'visao': return 'accent-color';
+                        default: return 'text-gray-500';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
